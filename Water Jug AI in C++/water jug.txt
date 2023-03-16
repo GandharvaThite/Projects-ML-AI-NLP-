@@ -1,0 +1,23 @@
+#include <iostream>
+using namespace std;
+
+void water_jug(int x, int y){
+    int capacity_x = 2;
+    int capacity_y = 3;
+    int target = 1;
+    cout<<x<<" "<<y<<endl;
+    if(y == target || x== target) return;
+    else if(y == capacity_y) water_jug(0,x);
+    else if(x<capacity_x) water_jug(capacity_x,y);
+    // else if(x!=0 && y==0) water_jug(0,x);
+    else if(x<capacity_y-y) water_jug(0,x+y);
+    else water_jug(x+y - capacity_y,capacity_y);
+
+}
+int main()
+{
+    cout<<"X"<<" "<<"Y"<<endl;
+    water_jug(0,0);
+
+    return 0;
+}

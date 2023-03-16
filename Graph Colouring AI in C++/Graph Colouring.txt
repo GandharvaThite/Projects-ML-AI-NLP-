@@ -1,0 +1,101 @@
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+bool isSafe(int node,int color[],bool graph[101][101],int n, int paint){
+    for(int i=0;i<n;i++){
+        if(i!=node && graph[i][node]==1 && color[i] == paint){
+            return false;
+        }
+    }
+    return true;
+}
+bool color_graph(int node,int color[], int m, int n, bool graph[101][101]){
+    
+    if(node==n) {
+        if(isSafe(node,color,graph,n,m)) return true;
+        return false;
+        
+    };
+    
+    for(int i=1;i<=m;i++){
+        if(isSafe(node,color,graph,n,i)){
+            color[node] = i;
+            if(color_graph(node+1,color,m,n,graph)) return true;
+            color[node] = 0;
+            
+        }
+    }
+    return false;
+}
+void mazha_sort(vector<int>&v){
+    for(int i=1;i<v.size();i++){
+        for(int j=1;j<v.size();j++){
+            if(v[i]>v[j]){
+                int temp = v[i];
+                v[i] = v[j];
+                v[j] = temp;
+            }
+        }
+    }
+}
+int main()
+{
+    int n = 7;
+    // int a[][2] = {{1,2},{2,3},{3,4},{4,1},{3,1}};
+    // int a[][2] = {{1,2},{2,3},{3,4},{4,5},{5,1},{1,6},{2,7},{3,8},{4,9},{5,10},{6,8},{6,9},{7,10},{7,9},{8,10}};
+    // int a[][2] = {{1,2},{2,3},{3,1},{1,4},{4,2},{4,3}};
+    int a[][2] = {{1,2},{2,3},{2,4},{4,5},{5,6},{6,1},{3,5},{3,6},{3,1},{3,4}};
+    // int a[][2] = {{1,2},{2,3},{3,4},{4,5},{5,1},{1,3}};
+    bool graph[101][101];
+    for(int i =0;i<sizeof(a)/sizeof(a[0]);i++){
+        graph[a[i][0]][a[i][1]] = 1;
+        graph[a[i][1]][a[i][0]] = 1;
+    }
+    int color[n];
+    for(int i=0;i<n;i++){
+        color[i] = 0;
+    }
+    vector<int>degrees;
+    degrees.push_back(0);
+    for(int i=0;i<n;i++){
+        degrees.push_back(0);
+    }
+    for(int i=1;i<n;i++){
+        int cnt = 0;
+        for(int j=1;j<n;j++){
+            
+            if(graph[i][j]==1){
+                cnt++;
+            }
+        }
+        degrees[i] = cnt;
+    }
+    mazha_sort(degrees);
+    
+    int max = degrees[1];
+    int num = 0;
+    for(int i=0;i<degrees.size();i++){
+        if(degrees[i]==max) num++;
+    }
+    
+    if(num%2 == 0){
+        cout<<"Min colors used: "<<max<<endl;
+    }
+    else{
+        max--;
+        cout<<"Min colors used: "<<max<<endl;
+    }
+    int m = max;
+    if(color_graph(1,color,m,n,graph)==0){
+    cout<<"Not possible with "<<m<<" colours"<<endl;
+    }
+    else{
+        for(int i=1;i<n;i++){
+            cout<<"Colour vertex "<<i<<" with colour: "<<color[i]<<endl;
+        }
+    cout<<endl;
+    }
+    
+    
+    return 0;
+}

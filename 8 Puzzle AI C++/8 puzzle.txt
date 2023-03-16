@@ -1,0 +1,183 @@
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+
+void move_left(vector<vector<int>>&arr){
+    for (int i=0;i<arr.size();i++){
+        for (int j=0;j<arr[i].size();j++){
+            if(arr[i][j]==0){
+                if(j!=0){
+                    int temp = arr[i][j];
+                    arr[i][j] = arr[i][j-1];
+                    arr[i][j-1] = temp;
+                    
+                }
+                
+                break;
+            }
+        }
+    }
+}
+void move_right(vector<vector<int>>&arr){
+    for (int i=0;i<arr.size();i++){
+        for (int j=0;j<arr[i].size();j++){
+            if(arr[i][j]==0){
+                if(j!=arr.size()-1){
+                    int temp = arr[i][j];
+                    arr[i][j] = arr[i][j+1];
+                    arr[i][j+1] = temp;
+                    
+                }
+                
+                break;
+            }
+        }
+    }
+}
+void move_up(vector<vector<int>>&arr){
+    for (int i=0;i<arr.size();i++){
+        for (int j=0;j<arr[i].size();j++){
+            if(arr[i][j]==0){
+                if(i!=0){
+                    int temp = arr[i][j];
+                    arr[i][j] = arr[i-1][j];
+                    arr[i-1][j] = temp;
+                    
+                }
+                
+                break;
+            }
+        }
+    }
+}
+void move_down(vector<vector<int>>&arr){
+    bool flag = false;
+    for (int i=0;i<arr.size();i++){
+        for (int j=0;j<arr[i].size();j++){
+            if(arr[i][j]==0){
+                if(i!=arr.size()-1){
+                    int temp = arr[i][j];
+                    arr[i][j] = arr[i+1][j];
+                    arr[i+1][j] = temp;
+                    flag = true;
+                    
+                }
+                
+                break;
+                
+            }
+        }
+        if(flag){
+            break;
+        }
+    }
+}
+void print(vector<vector<int>>&arr){
+    for (int i=0;i<arr.size();i++){
+        for (int j=0;j<arr[i].size();j++){
+            cout<<arr[i][j]<<" ";
+        }
+        cout<<endl;
+    }
+    cout<<"----------------"<<endl;
+}
+int h_value(vector<vector<int>>&state,vector<vector<int>>&goal){
+    int cnt = 0;
+    for(int i=0;i<state.size();i++){
+        for(int j=0;j<state[i].size();j++){
+            if(state[i][j]!=goal[i][j]){
+                cnt++;
+            }
+        }
+    }
+    return cnt;
+}
+void victory(vector<vector<int>>&state,vector<vector<int>>&goal){
+    
+    if(state == goal){
+        return;
+    }
+    vector<int>store;
+    vector<vector<int>>board;
+    for(int i=0;i<state.size();i++){
+        board.push_back(state[i]);
+    }
+    
+    move_left(state);
+    store.push_back(h_value(state,goal));
+    state = board;
+    
+    
+    move_right(state);
+    store.push_back(h_value(state,goal));
+    state = board;
+    
+    
+    move_up(state);
+    store.push_back(h_value(state,goal));
+    state = board;
+   
+    
+    move_down(state);
+    store.push_back(h_value(state,goal));
+    state = board;
+    
+    int min_ele_ind = min_element(store.begin(),store.end()) - store.begin();
+    for(int i=0;i<store.size();i++){
+        cout<<store[i]<<" ";
+    }
+    cout<<endl;
+    cout<<min_ele_ind<<endl;
+    if(min_ele_ind == 0){
+        
+        move_left(state);
+        print(state);
+        board = {};
+        for(int i=0;i<state.size();i++){
+            board.push_back(state[i]);
+        }
+        
+    }
+    else if(min_ele_ind == 1){
+        
+        move_right(state);
+        print(state);
+        board = {};
+        for(int i=0;i<state.size();i++){
+            board.push_back(state[i]);
+        }
+        
+    }
+    else if(min_ele_ind == 2){
+        
+        move_up(state);
+        print(state);
+        board = {};
+        for(int i=0;i<state.size();i++){
+            board.push_back(state[i]);
+        }
+       
+    }
+    else if(min_ele_ind == 3){
+        
+        move_down(state);
+        print(state);
+        board = {};
+        for(int i=0;i<state.size();i++){
+            board.push_back(state[i]);
+        }
+        
+    }
+    victory(board,goal);
+}
+int main()
+{
+    vector<vector<int>>b = {{1,2,3},{0,4,6},{7,5,8}};
+    vector<vector<int>>w = {{1,2,3},{8,0,4},{7,6,5}};
+    cout<<"Initial State:-"<<endl;
+    print(b);
+    cout<<"************************"<<endl;
+    cout<<"Moves by machine:- "<<endl;
+    victory(b,w);
+    return 0;
+}

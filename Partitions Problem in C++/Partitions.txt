@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+bool partitions(int x,int n,int sum,vector<int>&nums,vector<int>&ds, vector<vector<int>>&ans){
+    if(x==n){
+        if(sum == 0){
+            ans.push_back(ds);
+        }
+        return true;
+    }
+    if(sum>=nums[x]){
+        ds.push_back(nums[x]);
+        if(partitions(x,n,sum-nums[x],nums,ds,ans)) return true;
+        ds.pop_back();
+        
+    }
+    partitions(x+1,n,sum,nums,ds,ans);
+    return false;
+}
+int main()
+{
+    vector<vector<int>>ans;
+    vector<int>ds;
+    vector<int>nums;
+    int n = 90;
+    int k = 0;
+    for(int i=1;i<=n;i++){
+        nums.push_back(i);
+    }
+    partitions(0,n,n,nums,ds,ans);
+    cout<<ans.size()<<endl;
+    // cout<<k<<endl;
+    // for(auto i:ans){
+    //     for(auto j:i){
+    //         cout<<j<<" ";
+    //     }
+    //     cout<<endl;
+    // }
+    
+    return 0;
+}

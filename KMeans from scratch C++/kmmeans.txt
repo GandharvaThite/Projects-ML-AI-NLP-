@@ -1,0 +1,89 @@
+#include <bits/stdc++.h>
+#include <iostream>
+using namespace std;
+bool isConstant(vector<float>&mv){
+    set<float>s;
+    for(auto i:mv){
+        s.insert(i);
+    }
+    int len = mv.size() - s.size();
+    if(len>0) return true;
+    return false;
+}
+void man_diff(int x, vector<int>&p, vector<float>&s1){
+    for(int i=0;i<p.size();i++){
+        float z = abs(x-p[i]);
+        s1.push_back(z);
+    }
+}
+float avg(vector<float>c){
+    float sum = 0;
+    for(int i=0;i<c.size();i++){
+        sum+=c[i];
+    }
+    float ans = sum/c.size();
+    return ans;
+}
+int main()
+{
+    vector<int>points={2,3,4,10,11,12,20,25,30};
+    vector<float>mean_vals;
+    vector<float>mass = {4,12,20};
+    int no_of_clusters = 3;
+    int q = 1;
+    while(!isConstant(mean_vals)){
+        vector<vector<float>>store;
+        vector<vector<float>>clusters;
+        vector<vector<float>>arr;
+        for(int i=0;i<mass.size();i++){
+            vector<float>c;
+            clusters.push_back(c);
+        }
+        for(int i=0;i<mass.size();i++){
+            vector<float>diffs;
+            man_diff(mass[i],points,diffs);
+            cout<<endl;
+            store.push_back(diffs);
+        }
+        for(int i=0;i<points.size();i++){
+            vector<float>r;
+            for(int j=0;j<mass.size();j++){
+                r.push_back(store[j][i]);
+            }
+            arr.push_back(r);
+        }
+        for(int i=0;i<arr.size();i++){
+            int minElementIndex = min_element(arr[i].begin(),arr[i].end()) - arr[i].begin();
+            clusters[minElementIndex].push_back(points[i]);
+            
+        }
+        int k = 1;
+        for(auto i:clusters){
+            cout<<"Cluster "<<k<<": ";
+            for(auto j:i){
+                cout<<j<<" ";
+            }
+            cout<<endl;
+            k++;
+        }
+        cout<<"-----------------------------------"<<endl;
+        for(int i=0;i<mass.size();i++){
+            mass.pop_back();
+        }
+        mass.pop_back();
+        for(int i=0;i<no_of_clusters;i++){
+            mass.push_back(avg(clusters[i]));
+            mean_vals.push_back(avg(clusters[i]));
+        }
+        for(int i=0;i<mass.size();i++){
+            cout<<mass[i]<<" ";
+        }
+        cout<<endl;
+        q++;
+    }
+    for(int i=0;i<mean_vals.size();i++){
+        cout<<mean_vals[i]<<" ";
+    }
+    cout<<endl;
+    return 0;
+}
